@@ -20,14 +20,12 @@ public class Main extends JFrame {
 	public static void main(String[] args) {
 		applyDefaultSystemLook();
 		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Main frame = new Main();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				Main frame = new Main();
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
