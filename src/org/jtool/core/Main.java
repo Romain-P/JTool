@@ -1,18 +1,18 @@
 package org.jtool.core;
 
-import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
+import org.jtool.frontend.MainView;
+
 import java.awt.Toolkit;
 
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 
-	private JPanel contentPane;
+	private final Container defaultView;
 
 	/**
 	 * Launch the application.
@@ -38,16 +38,15 @@ public class Main extends JFrame {
 		setTitle("JTool");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/icon.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 400);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		setBounds(100, 100, 600, 600);
+		
+		this.defaultView = new MainView();
+		setContentPane(this.defaultView);
 	}
 
 	/**
 	 *  Apply the default system look e.g beautiful windows for WindowsOs.
-	 *  By default, a java ui application is taking built-in java css, that are for the most so old and ugly.
+	 *  By default, a java user-interface application is taking built-in java style-sheets, that are for the most so old and ugly.
 	 */
 	private static void applyDefaultSystemLook() {
 		try {
