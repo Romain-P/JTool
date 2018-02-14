@@ -22,6 +22,7 @@ public class RsaDecrypter {
 	
     /**
      * @param cipherText encrypted text to make human readable.
+     * @param padding the chosen padding for decryption
      * @return the text decrypted from the private key
      */
     public String decrypt(String cipherText, String padding) {
