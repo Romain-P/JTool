@@ -9,28 +9,32 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 
-public class RsaEncrypter {
+import org.jtool.shared.Crypter;
+
+public class RsaEncrypter implements Crypter {
 	private String publicKey;
+	private String padding;
 	
-	public static RsaEncrypter withPublicKey(String publicKey) {
-		return new RsaEncrypter(publicKey);
+	public static RsaEncrypter of(String publicKey, String padding) {
+		return new RsaEncrypter(publicKey, padding);
 	}
 
-	private RsaEncrypter(String publicKey) {
+	private RsaEncrypter(String publicKey, String padding) {
 		this.publicKey = publicKey;
+		this.padding = padding;
 	}
 	
     /**
      * @param plaintext human readable text to encrypt.
      * @return the text encrypted from the public key
      */
-    public String encrypt(String plaintext) {
+    public String apply(String plaintext) {
         if (this.publicKey == null)
             return "Can't encrypt the message, you didn't specify the public key.";
 
         Cipher cipher;
 		try {
-			cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			cipher = Cipher.getInstance(padding);
 		} catch (Exception e) {
 			return "no rsa algorithm found: " + e.getMessage();
 		}
@@ -61,7 +65,13 @@ public class RsaEncrypter {
         return factory.generatePublic(spec);
     }
     
-    public void setPublicKey(String key) {
+    public RsaEncrypter setKey(String key) {
     	this.publicKey = key;
+    	return this;
+    }
+    
+    public RsaEncrypter setPadding(String padding) {
+    	this.padding = padding;
+    	return this;
     }
 }

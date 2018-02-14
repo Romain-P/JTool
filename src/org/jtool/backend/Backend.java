@@ -1,27 +1,47 @@
 package org.jtool.backend;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.jtool.shared.CryptagePadding;
+import org.jtool.shared.Crypter;
+
 public class Backend {
-	private final RsaDecrypter rsaDecrypter;
-	private final RsaEncrypter rsaEncrypter;
+	private final Crypter rsaDecrypter;
+	private final Crypter rsaEncrypter;
+	private final Set<CryptagePadding> rsaPaddings;
 	
 	private Backend() {
-		this.rsaDecrypter = RsaDecrypter.withPrivateKey(null);
-		this.rsaEncrypter = RsaEncrypter.withPublicKey(null);
+		this.rsaDecrypter = RsaDecrypter.of(null, null);
+		this.rsaEncrypter = RsaEncrypter.of(null, null);
+		this.rsaPaddings = new HashSet<>();
 	}
 	
-	public RsaDecrypter getRsaDecrypter() {
+	public Backend initialize() {
+		rsaPaddings.add(new CryptagePadding("PKCS1 1024/2048 bits", "RSA/ECB/PKCS1Padding"));
+		rsaPaddings.add(new CryptagePadding("OAEPWithSHA-1 + MGF1 1024/2048 bits", "RSA/ECB/OAEPWithSHA-1AndMGF1Padding"));
+		rsaPaddings.add(new CryptagePadding("OAEPWithSHA-256 + MGF1 1024/2048 bits", "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"));
+		
+		return this;
+	}
+	
+	public Crypter getRsaDecrypter() {
 		return this.rsaDecrypter;
 	}
 	
-	public RsaEncrypter getRsaEncrypter() {
+	public Crypter getRsaEncrypter() {
 		return this.rsaEncrypter;
+	}
+	
+	public Set<CryptagePadding> getRsaPaddings() {
+		return this.rsaPaddings;
 	}
 	
 	/**
 	 * Create a lazy-loaded singleton of our backend, thread-safe.
 	 */
 	private static class BackendHolder {
-		private static final Backend instance = new Backend();
+		private static final Backend instance = new Backend().initialize();
 	}
 	
 	/**

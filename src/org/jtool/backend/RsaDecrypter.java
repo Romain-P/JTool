@@ -9,26 +9,30 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 
-public class RsaDecrypter {
+import org.jtool.shared.Crypter;
+
+public class RsaDecrypter implements Crypter {
 	private String privateKey;
+	private String padding;
 	
-	public static RsaDecrypter withPrivateKey(String privateKey) {
-		return new RsaDecrypter(privateKey);
+	public static RsaDecrypter of(String privateKey, String padding) {
+		return new RsaDecrypter(privateKey, padding);
 	}
 
-	private RsaDecrypter(String privateKey) {
+	private RsaDecrypter(String privateKey, String padding) {
 		this.privateKey = privateKey;
+		this.padding = padding;
 	}
 	
     /**
      * @param cipherText encrypted text to make human readable.
-     * @param padding the chosen padding for decryption
      * @return the text decrypted from the private key
      */
-    public String decrypt(String cipherText, String padding) {
+    public String apply(String cipherText) {
         if (this.privateKey == null)
             return "Can't decrypt the message, you didn't specify the private key.";
 
+        
         byte[] bytes = Base64.getDecoder().decode(cipherText);
 
         Cipher cipher;
@@ -61,7 +65,13 @@ public class RsaDecrypter {
     }
     
    
-    public void setPrivateKey(String key) {
+    public RsaDecrypter setKey(String key) {
     	this.privateKey = key;
+    	return this;
+    }
+    
+    public RsaDecrypter setPadding(String padding) {
+    	this.padding = padding;
+    	return this;
     }
 }
