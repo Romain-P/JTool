@@ -5,7 +5,7 @@ A basic java gui using swing for encryption modules
 * RSA Encrypter
 * RSA Decrypter
 
-![demo](https://puu.sh/znXOP/b4b6aee7da.gif)
+![demo](https://puu.sh/zocIN/814d213d97.gif)
 
 ### Install
 
