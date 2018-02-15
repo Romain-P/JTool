@@ -48,7 +48,6 @@ public class RsaView extends JPanel {
 
     private void handleClearButton() {
         settings.publicKeyText.setText("");
-        ;
         settings.privateKeyText.setText("");
         settings.generateButton.setEnabled(true);
         settings.clearButton.setEnabled(false);
