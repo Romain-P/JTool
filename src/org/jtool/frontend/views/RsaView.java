@@ -1,18 +1,20 @@
 package org.jtool.frontend.views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import org.jtool.backend.Backend;
+import org.jtool.backend.RsaGenerator;
 import org.jtool.shared.ComponentUtil;
 import org.jtool.shared.CryptagePadding;
 import org.jtool.shared.Crypter;
@@ -36,8 +38,8 @@ public class RsaView extends JPanel {
 		private final JLabel privateKeyLabel;
 		private final JLabel publicKeyLabel;
 		private final JLabel paddingLabel;
-		private final JTextPane privateKeyText;
-		private final JTextPane publicKeyText;
+		private final JTextArea privateKeyText;
+		private final JTextArea publicKeyText;
 		private final JScrollPane privateKeyScroller;
 		private final JScrollPane publicKeyScroller;
 		private final JComboBox<CryptagePadding> paddingList;
@@ -58,20 +60,26 @@ public class RsaView extends JPanel {
 			 */
 			privateKeyLabel = new JLabel("Private Key");
 			privateKeyLabel.setBounds(10, 24, 71, 14);
-			privateKeyText = new JTextPane();
+			privateKeyText = new JTextArea();
+			privateKeyText.setLineWrap(true);
 			privateKeyText.setBounds(10, 43, 525, 45);
-			privateKeyScroller = new JScrollPane(privateKeyText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			privateKeyScroller = new JScrollPane(privateKeyText);
 			privateKeyScroller.setBounds(10, 43, 525, 45);
+			privateKeyScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			privateKeyScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			
 			/**
 			 * public key
 			 */
 			publicKeyLabel = new JLabel("Public Key");
 			publicKeyLabel.setBounds(10, 105, 71, 14);
-			publicKeyText = new JTextPane();
+			publicKeyText = new JTextArea();
+			publicKeyText.setLineWrap(true);
 			publicKeyText.setBounds(10, 124, 525, 45);
 			publicKeyScroller = new JScrollPane(publicKeyText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			publicKeyScroller.setBounds(10, 124, 525, 45);
+			publicKeyScroller.setMaximumSize(new Dimension(525, Integer.MAX_VALUE));
+			publicKeyScroller.setVerifyInputWhenFocusTarget(true);
 			
 			/**
 			 * Buttons
@@ -105,8 +113,8 @@ public class RsaView extends JPanel {
 		private final JPanel cryption;
 		private final JLabel cryptionInputLabel;
 		private final JLabel generatedLabel;
-		private final JTextPane cryptionInputText;
-		private final JTextPane generatedText;
+		private final JTextArea cryptionInputText;
+		private final JTextArea generatedText;
 		private final JScrollPane cryptionInputScroller;
 		private final JScrollPane generatedScroller;
 		private final JButton encrypteButton;
@@ -127,9 +135,10 @@ public class RsaView extends JPanel {
 			 */
 			cryptionInputLabel = new JLabel("Cypher / Plain Text");
 			cryptionInputLabel.setBounds(10, 24, 110, 14);
-			cryptionInputText = new JTextPane();
+			cryptionInputText = new JTextArea();
+			cryptionInputText.setLineWrap(true);
 			cryptionInputText.setBounds(10, 43, 525, 45);
-			cryptionInputScroller = new JScrollPane(cryptionInputText, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			cryptionInputScroller = new JScrollPane(cryptionInputText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			cryptionInputScroller.setBounds(10, 43, 525, 45);
 			
 			/**
@@ -137,10 +146,11 @@ public class RsaView extends JPanel {
 			 */
 			generatedLabel = new JLabel("Generated");
 			generatedLabel.setBounds(10, 149, 71, 14);
-			generatedText = new JTextPane();
+			generatedText = new JTextArea();
+			generatedText.setLineWrap(true);
 			generatedText.setEditable(false);
 			generatedText.setBounds(10, 168, 525, 45);
-			generatedScroller = new JScrollPane(generatedText, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			generatedScroller = new JScrollPane(generatedText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			generatedScroller.setBounds(10, 168, 525, 45);
 			
 			/**
@@ -156,7 +166,7 @@ public class RsaView extends JPanel {
 			/**
 			 * Add all to our user interface
 			 */
-			ComponentUtil.add(cryption, cryptionInputLabel, generatedLabel, cryptionInputText, generatedText, cryptionInputScroller, generatedScroller, encrypteButton, decrypteButton);
+			ComponentUtil.add(cryption, cryptionInputLabel, generatedLabel, cryptionInputScroller, generatedScroller, encrypteButton, decrypteButton);
 			ComponentUtil.add(parent, cryption);
 		}
 	}
@@ -185,9 +195,22 @@ public class RsaView extends JPanel {
 		
 		ComponentUtil.onMouseReleased(() -> generateRsaResult(Backend.get().getRsaEncrypter(), settings.publicKeyText), cryption.encrypteButton);
 		ComponentUtil.onMouseReleased(() -> generateRsaResult(Backend.get().getRsaDecrypter(), settings.privateKeyText), cryption.decrypteButton);
+		ComponentUtil.onMouseReleased(() -> generateKeyPair(), settings.generateButton);
 	}
 	
-	private void generateRsaResult(Crypter crypter, JTextPane keyPane) {
+	private void generateKeyPair() {
+		RsaGenerator generator = Backend.get().getRsaGenerator();
+		RsaGenerator.Base64KeyPair pair = generator.generate();
+		
+		settings.privateKeyText.setText(pair.privateKey);
+		settings.publicKeyText.setText(pair.publicKey);
+		settings.clearButton.setEnabled(true);
+		
+		if (!generator.errorOccured())
+			settings.generateButton.setEnabled(false);
+	}
+	
+	private void generateRsaResult(Crypter crypter, JTextArea keyPane) {
 		String key = keyPane.getText();
 		String padding = ((CryptagePadding) settings.paddingList.getSelectedItem()).getPath();
 		crypter.setKey(key).setPadding(padding);

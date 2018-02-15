@@ -9,11 +9,13 @@ import org.jtool.shared.Crypter;
 public class Backend {
 	private final Crypter rsaDecrypter;
 	private final Crypter rsaEncrypter;
+	private final RsaGenerator rsa2048Generator;
 	private final Set<CryptagePadding> rsaPaddings;
 	
 	private Backend() {
 		this.rsaDecrypter = RsaDecrypter.of(null, null);
 		this.rsaEncrypter = RsaEncrypter.of(null, null);
+		this.rsa2048Generator = RsaGenerator.withLength(2048);
 		this.rsaPaddings = new HashSet<>();
 	}
 	
@@ -31,6 +33,10 @@ public class Backend {
 	
 	public Crypter getRsaEncrypter() {
 		return this.rsaEncrypter;
+	}
+	
+	public RsaGenerator getRsaGenerator() {
+		return this.rsa2048Generator;
 	}
 	
 	public Set<CryptagePadding> getRsaPaddings() {
