@@ -1,7 +1,6 @@
 package org.jtool.frontend.views;
 
 import java.awt.Color;
-import java.awt.Dimension;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -9,7 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
@@ -63,10 +61,8 @@ public class RsaView extends JPanel {
 			privateKeyText = new JTextArea();
 			privateKeyText.setLineWrap(true);
 			privateKeyText.setBounds(10, 43, 525, 45);
-			privateKeyScroller = new JScrollPane(privateKeyText);
+			privateKeyScroller = new JScrollPane(privateKeyText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			privateKeyScroller.setBounds(10, 43, 525, 45);
-			privateKeyScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			privateKeyScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			
 			/**
 			 * public key
@@ -78,8 +74,6 @@ public class RsaView extends JPanel {
 			publicKeyText.setBounds(10, 124, 525, 45);
 			publicKeyScroller = new JScrollPane(publicKeyText, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			publicKeyScroller.setBounds(10, 124, 525, 45);
-			publicKeyScroller.setMaximumSize(new Dimension(525, Integer.MAX_VALUE));
-			publicKeyScroller.setVerifyInputWhenFocusTarget(true);
 			
 			/**
 			 * Buttons
