@@ -14,13 +14,13 @@ public class RsaEncrypter implements Crypter {
     private String publicKey;
     private String padding;
 
-    public static RsaEncrypter of(String publicKey, String padding) {
-        return new RsaEncrypter(publicKey, padding);
-    }
-
     private RsaEncrypter(String publicKey, String padding) {
         this.publicKey = publicKey;
         this.padding = padding;
+    }
+
+    public static RsaEncrypter of(String publicKey, String padding) {
+        return new RsaEncrypter(publicKey, padding);
     }
 
     /**
