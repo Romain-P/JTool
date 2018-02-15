@@ -27,9 +27,12 @@ public class RsaView extends JPanel {
     private void handleEvents() {
         ComponentUtil.onKeyReleased(() -> applyErrorProtection(), settings.privateKeyText, settings.publicKeyText, cryption.cryptionInputText);
         ComponentUtil.onMouseReleased(() -> handleClearButton(), settings.clearButton);
+        ComponentUtil.onMouseReleased(() -> handleGeneratedClearButton(), cryption.genClearButton);
+        ComponentUtil.onMouseReleased(() -> handleInputClearButton(), cryption.clearButton);
         ComponentUtil.onMouseReleased(() -> generateRsaResult(Backend.get().getRsaEncrypter(), settings.publicKeyText), cryption.encrypteButton);
         ComponentUtil.onMouseReleased(() -> generateRsaResult(Backend.get().getRsaDecrypter(), settings.privateKeyText), cryption.decrypteButton);
         ComponentUtil.onMouseReleased(() -> generateKeyPair(), settings.generateButton);
+        ComponentUtil.onMouseReleased(() -> cryption.cryptionInputText.setText(cryption.generatedText.getText()), cryption.useGeneratedButton);
     }
 
     private void applyErrorProtection() {
@@ -41,15 +44,33 @@ public class RsaView extends JPanel {
 
         boolean clearIsUseful = !settings.publicKeyText.getText().isEmpty() || !settings.privateKeyText.getText().isEmpty();
         settings.clearButton.setEnabled(clearIsUseful);
+        
+        boolean inputClearIsUseful = !cryption.cryptionInputText.getText().isEmpty();
+        cryption.clearButton.setEnabled(inputClearIsUseful);
+        
+        boolean genClearIsUseful = !cryption.generatedText.getText().isEmpty();
+        cryption.genClearButton.setEnabled(genClearIsUseful);
 
         boolean generatePossible = settings.publicKeyText.getText().isEmpty() && settings.privateKeyText.getText().isEmpty();
         settings.generateButton.setEnabled(generatePossible);
+        
+        boolean useGeneratedPossible = !cryption.generatedText.getText().isEmpty();
+        cryption.useGeneratedButton.setEnabled(useGeneratedPossible);
     }
 
     private void handleClearButton() {
         settings.publicKeyText.setText("");
         settings.privateKeyText.setText("");
-        
+        applyErrorProtection();
+    }
+    
+    private void handleGeneratedClearButton() {
+        cryption.generatedText.setText("");
+        applyErrorProtection();
+    }
+    
+    private void handleInputClearButton() {
+        cryption.cryptionInputText.setText("");
         applyErrorProtection();
     }
 
@@ -69,9 +90,16 @@ public class RsaView extends JPanel {
         crypter.setKey(key).setPadding(padding);
 
         String charset = cryption.cryptionInputText.getText();
-        String result = crypter.apply(charset);
+        String result;
+        
+        try {
+        	result = crypter.apply(charset);
+        } catch (Exception e) {
+        	result = "unknown error occured: " + e.getMessage();
+        }
 
         cryption.generatedText.setText(result);
+        applyErrorProtection();
     }
 
     private static class SettingsPanel {
@@ -141,7 +169,10 @@ public class RsaView extends JPanel {
             /**
              * Add all to our user interface
              */
-            ComponentUtil.add(settings, privateKeyLabel, publicKeyLabel, privateKeyScroller, publicKeyScroller, generateButton, clearButton, paddingLabel, paddingList);
+            ComponentUtil.add(settings, privateKeyLabel, publicKeyLabel, 
+            		privateKeyScroller, publicKeyScroller, generateButton, 
+            		clearButton, paddingLabel, paddingList);
+            
             ComponentUtil.add(parent, settings);
         }
     }
@@ -156,6 +187,9 @@ public class RsaView extends JPanel {
         private final JScrollPane generatedScroller;
         private final JButton encrypteButton;
         private final JButton decrypteButton;
+        private final JButton useGeneratedButton;
+        private final JButton clearButton;
+        private final JButton genClearButton;
 
         public CryptionPanel(RsaView parent) {
             /**
@@ -165,7 +199,7 @@ public class RsaView extends JPanel {
             cryption.setLayout(null);
             cryption.setName("");
             cryption.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Encryption / Decryption", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-            cryption.setBounds(10, 265, 564, 224);
+            cryption.setBounds(10, 265, 564, 258);
 
             /**
              * cryption input
@@ -194,16 +228,28 @@ public class RsaView extends JPanel {
              * buttons
              */
             encrypteButton = new JButton("Encrypte");
-            encrypteButton.setBounds(64, 96, 136, 23);
+            encrypteButton.setBounds(10, 96, 136, 23);
             encrypteButton.setEnabled(false);
             decrypteButton = new JButton("Decrypte");
-            decrypteButton.setBounds(382, 99, 136, 23);
+            decrypteButton.setBounds(160, 96, 136, 23);
             decrypteButton.setEnabled(false);
+            useGeneratedButton = new JButton("Use Generated");
+            useGeneratedButton.setBounds(10, 223, 136, 23);
+            useGeneratedButton.setEnabled(false);
+            genClearButton = new JButton("Clear");
+            genClearButton.setBounds(399, 223, 136, 23);
+            genClearButton.setEnabled(false);
+            clearButton = new JButton("Clear");
+            clearButton.setBounds(399, 96, 136, 23);
+            clearButton.setEnabled(false);
 
             /**
              * Add all to our user interface
              */
-            ComponentUtil.add(cryption, cryptionInputLabel, generatedLabel, cryptionInputScroller, generatedScroller, encrypteButton, decrypteButton);
+            ComponentUtil.add(cryption, cryptionInputLabel, generatedLabel, 
+            		cryptionInputScroller, generatedScroller, encrypteButton, 
+            		decrypteButton, useGeneratedButton, genClearButton, clearButton);
+            
             ComponentUtil.add(parent, cryption);
         }
     }

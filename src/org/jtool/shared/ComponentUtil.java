@@ -36,7 +36,8 @@ public final class ComponentUtil {
             component.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    action.run();
+                	if (component.isEnabled())
+                		action.run();
                 }
             });
         }
@@ -53,7 +54,8 @@ public final class ComponentUtil {
             component.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    action.run();
+                	if (component.isEnabled())
+                		action.run();
                 }
             });
         }
