@@ -49,8 +49,8 @@ public class RsaView extends JPanel {
     private void handleClearButton() {
         settings.publicKeyText.setText("");
         settings.privateKeyText.setText("");
-        settings.generateButton.setEnabled(true);
-        settings.clearButton.setEnabled(false);
+        
+        applyErrorProtection();
     }
 
     private void generateKeyPair() {
@@ -59,10 +59,8 @@ public class RsaView extends JPanel {
 
         settings.privateKeyText.setText(pair.privateKey);
         settings.publicKeyText.setText(pair.publicKey);
-        settings.clearButton.setEnabled(true);
-
-        if (!generator.errorOccured())
-            settings.generateButton.setEnabled(false);
+        
+        applyErrorProtection();
     }
 
     private void generateRsaResult(Crypter crypter, JTextArea keyPane) {

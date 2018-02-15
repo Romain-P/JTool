@@ -7,7 +7,6 @@ import java.util.Base64;
 
 public class RsaGenerator {
     private final int length;
-    private boolean errorOccured;
 
     private RsaGenerator(int length) {
         this.length = length;
@@ -24,7 +23,6 @@ public class RsaGenerator {
             generator = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             String error = "error while generating rsa key-pair: " + e.getMessage();
-            errorOccured = true;
             return new Base64KeyPair(error, error);
         }
 
@@ -33,15 +31,7 @@ public class RsaGenerator {
         String privateKey = Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded());
         String publicKey = Base64.getEncoder().encodeToString(pair.getPublic().getEncoded());
 
-        errorOccured = false;
         return new Base64KeyPair(privateKey, publicKey);
-    }
-
-    /**
-     * @return true if an error occured in the last generation
-     */
-    public boolean errorOccured() {
-        return this.errorOccured;
     }
 
     public static final class Base64KeyPair {
