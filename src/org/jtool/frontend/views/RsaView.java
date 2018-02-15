@@ -3,7 +3,7 @@ package org.jtool.frontend.views;
 import org.jtool.backend.Backend;
 import org.jtool.backend.RsaGenerator;
 import org.jtool.shared.ComponentUtil;
-import org.jtool.shared.CryptagePadding;
+import org.jtool.shared.CryptionPadding;
 import org.jtool.shared.Crypter;
 
 import javax.swing.*;
@@ -86,7 +86,7 @@ public class RsaView extends JPanel {
 
     private void generateRsaResult(Crypter crypter, JTextArea keyPane) {
         String key = keyPane.getText();
-        String padding = ((CryptagePadding) settings.paddingList.getSelectedItem()).getPath();
+        String padding = ((CryptionPadding) settings.paddingList.getSelectedItem()).getPath();
         crypter.setKey(key).setPadding(padding);
 
         String charset = cryption.cryptionInputText.getText();
@@ -111,7 +111,7 @@ public class RsaView extends JPanel {
         private final JTextArea publicKeyText;
         private final JScrollPane privateKeyScroller;
         private final JScrollPane publicKeyScroller;
-        private final JComboBox<CryptagePadding> paddingList;
+        private final JComboBox<CryptionPadding> paddingList;
         private final JButton generateButton;
         private final JButton clearButton;
 
@@ -161,7 +161,7 @@ public class RsaView extends JPanel {
             paddingLabel = new JLabel("Padding");
             paddingLabel.setBounds(10, 175, 46, 14);
             paddingList = new JComboBox<>();
-            for (CryptagePadding padding : Backend.get().getRsaPaddings())
+            for (CryptionPadding padding : Backend.get().getRsaPaddings())
                 paddingList.addItem(padding);
             paddingList.setBounds(10, 190, 233, 21);
             paddingList.setSelectedIndex(1);

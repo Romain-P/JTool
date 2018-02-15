@@ -1,6 +1,6 @@
 package org.jtool.backend;
 
-import org.jtool.shared.CryptagePadding;
+import org.jtool.shared.CryptionPadding;
 import org.jtool.shared.Crypter;
 
 import java.util.HashSet;
@@ -10,7 +10,7 @@ public class Backend {
     private final Crypter rsaDecrypter;
     private final Crypter rsaEncrypter;
     private final RsaGenerator rsa2048Generator;
-    private final Set<CryptagePadding> rsaPaddings;
+    private final Set<CryptionPadding> rsaPaddings;
 
     private Backend() {
         this.rsaDecrypter = RsaDecrypter.of(null, null);
@@ -27,9 +27,9 @@ public class Backend {
     }
 
     public Backend initialize() {
-        rsaPaddings.add(new CryptagePadding("PKCS1 1024/2048 bits", "RSA/ECB/PKCS1Padding"));
-        rsaPaddings.add(new CryptagePadding("OAEPWithSHA-1 + MGF1 1024/2048 bits", "RSA/ECB/OAEPWithSHA-1AndMGF1Padding"));
-        rsaPaddings.add(new CryptagePadding("OAEPWithSHA-256 + MGF1 1024/2048 bits", "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"));
+        rsaPaddings.add(new CryptionPadding("PKCS1 1024/2048 bits", "RSA/ECB/PKCS1Padding"));
+        rsaPaddings.add(new CryptionPadding("OAEPWithSHA-1 + MGF1 1024/2048 bits", "RSA/ECB/OAEPWithSHA-1AndMGF1Padding"));
+        rsaPaddings.add(new CryptionPadding("OAEPWithSHA-256 + MGF1 1024/2048 bits", "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"));
 
         return this;
     }
@@ -46,7 +46,7 @@ public class Backend {
         return this.rsa2048Generator;
     }
 
-    public Set<CryptagePadding> getRsaPaddings() {
+    public Set<CryptionPadding> getRsaPaddings() {
         return this.rsaPaddings;
     }
 
