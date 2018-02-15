@@ -166,30 +166,32 @@ public class RsaView extends JPanel {
 	}
 	
 	private void handleEvents() {
-		ComponentUtil.onKeyReleased(() -> {
-			boolean cryptionPossible = !settings.publicKeyText.getText().isEmpty() && !cryption.cryptionInputText.getText().isEmpty();
-			cryption.encrypteButton.setEnabled(cryptionPossible);
-			
-			boolean decryptionPossible = !settings.privateKeyText.getText().isEmpty() && !cryption.cryptionInputText.getText().isEmpty();
-			cryption.decrypteButton.setEnabled(decryptionPossible);
-			
-			boolean clearIsUseful = !settings.publicKeyText.getText().isEmpty() || !settings.privateKeyText.getText().isEmpty();
-			settings.clearButton.setEnabled(clearIsUseful);
-			
-			boolean generatePossible = settings.publicKeyText.getText().isEmpty() && settings.privateKeyText.getText().isEmpty();
-			settings.generateButton.setEnabled(generatePossible);
-		}, settings.privateKeyText, settings.publicKeyText, cryption.cryptionInputText);
-		
-		ComponentUtil.onMouseReleased(() -> {
-			settings.publicKeyText.setText("");;
-			settings.privateKeyText.setText("");
-			settings.generateButton.setEnabled(true);
-			settings.clearButton.setEnabled(false);
-		}, settings.clearButton);
-		
+		ComponentUtil.onKeyReleased(() -> applyErrorProtection(), settings.privateKeyText, settings.publicKeyText, cryption.cryptionInputText);
+		ComponentUtil.onMouseReleased(() -> handleClearButton(), settings.clearButton);
 		ComponentUtil.onMouseReleased(() -> generateRsaResult(Backend.get().getRsaEncrypter(), settings.publicKeyText), cryption.encrypteButton);
 		ComponentUtil.onMouseReleased(() -> generateRsaResult(Backend.get().getRsaDecrypter(), settings.privateKeyText), cryption.decrypteButton);
 		ComponentUtil.onMouseReleased(() -> generateKeyPair(), settings.generateButton);
+	}
+	
+	private void applyErrorProtection() {
+		boolean cryptionPossible = !settings.publicKeyText.getText().isEmpty() && !cryption.cryptionInputText.getText().isEmpty();
+		cryption.encrypteButton.setEnabled(cryptionPossible);
+		
+		boolean decryptionPossible = !settings.privateKeyText.getText().isEmpty() && !cryption.cryptionInputText.getText().isEmpty();
+		cryption.decrypteButton.setEnabled(decryptionPossible);
+		
+		boolean clearIsUseful = !settings.publicKeyText.getText().isEmpty() || !settings.privateKeyText.getText().isEmpty();
+		settings.clearButton.setEnabled(clearIsUseful);
+		
+		boolean generatePossible = settings.publicKeyText.getText().isEmpty() && settings.privateKeyText.getText().isEmpty();
+		settings.generateButton.setEnabled(generatePossible);
+	}
+	
+	private void handleClearButton() {
+		settings.publicKeyText.setText("");;
+		settings.privateKeyText.setText("");
+		settings.generateButton.setEnabled(true);
+		settings.clearButton.setEnabled(false);
 	}
 	
 	private void generateKeyPair() {
