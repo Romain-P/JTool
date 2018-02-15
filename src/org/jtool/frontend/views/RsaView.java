@@ -102,8 +102,7 @@ public class RsaView extends JPanel {
         applyErrorProtection();
     }
 
-    private static class SettingsPanel {
-        private final JPanel settings;
+    private static class SettingsPanel extends JPanel {
         private final JLabel privateKeyLabel;
         private final JLabel publicKeyLabel;
         private final JLabel paddingLabel;
@@ -119,10 +118,9 @@ public class RsaView extends JPanel {
             /**
              * settings properties
              */
-            settings = new JPanel();
-            settings.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Settings", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-            settings.setBounds(10, 11, 564, 224);
-            settings.setLayout(null);
+            setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Settings", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+            setBounds(10, 11, 564, 224);
+            setLayout(null);
 
             /**
              * private key
@@ -169,16 +167,15 @@ public class RsaView extends JPanel {
             /**
              * Add all to our user interface
              */
-            ComponentUtil.add(settings, privateKeyLabel, publicKeyLabel, 
+            ComponentUtil.add(this, privateKeyLabel, publicKeyLabel, 
             		privateKeyScroller, publicKeyScroller, generateButton, 
             		clearButton, paddingLabel, paddingList);
             
-            ComponentUtil.add(parent, settings);
+            ComponentUtil.add(parent, this);
         }
     }
 
-    private static class CryptionPanel {
-        private final JPanel cryption;
+    private static class CryptionPanel extends JPanel {
         private final JLabel cryptionInputLabel;
         private final JLabel generatedLabel;
         private final JTextArea cryptionInputText;
@@ -195,11 +192,10 @@ public class RsaView extends JPanel {
             /**
              * cryption properties
              */
-            cryption = new JPanel();
-            cryption.setLayout(null);
-            cryption.setName("");
-            cryption.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Encryption / Decryption", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-            cryption.setBounds(10, 265, 564, 258);
+            setLayout(null);
+            setName("");
+            setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Encryption / Decryption", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+            setBounds(10, 265, 564, 258);
 
             /**
              * cryption input
@@ -246,11 +242,11 @@ public class RsaView extends JPanel {
             /**
              * Add all to our user interface
              */
-            ComponentUtil.add(cryption, cryptionInputLabel, generatedLabel, 
+            ComponentUtil.add(this, cryptionInputLabel, generatedLabel, 
             		cryptionInputScroller, generatedScroller, encrypteButton, 
             		decrypteButton, useGeneratedButton, genClearButton, clearButton);
             
-            ComponentUtil.add(parent, cryption);
+            ComponentUtil.add(parent, this);
         }
     }
 }
