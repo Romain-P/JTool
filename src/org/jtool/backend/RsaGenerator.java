@@ -33,6 +33,7 @@ public class RsaGenerator {
         String privateKey = Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded());
         String publicKey = Base64.getEncoder().encodeToString(pair.getPublic().getEncoded());
         
+        errorOccured = false;
         return new Base64KeyPair(privateKey, publicKey);
 	}
 	
